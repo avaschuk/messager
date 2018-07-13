@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "363175592859",
-    "firebase_url": "https://messager-ca0e2.firebaseio.com",
-    "project_id": "messager-ca0e2",
-    "storage_bucket": "messager-ca0e2.appspot.com"
+    "project_number": "367668830802",
+    "firebase_url": "https://messager-d5510.firebaseio.com",
+    "project_id": "messager-d5510",
+    "storage_bucket": "messager-d5510.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:363175592859:android:0aa9b6ec4df3e0c3",
+        "mobilesdk_app_id": "1:367668830802:android:0aa9b6ec4df3e0c3",
         "android_client_info": {
           "package_name": "com.andrei.messager"
         }
       },
       "oauth_client": [
         {
-          "client_id": "363175592859-tj7833kgva0b4rgmv52djm8sosjtto4k.apps.googleusercontent.com",
+          "client_id": "367668830802-dcndsjavv24ver5fu54i2096uhhrec1n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andrei.messager",
+            "certificate_hash": "f90a40f4f966e86039f98f7565c1807ff1a0da60"
+          }
+        },
+        {
+          "client_id": "367668830802-6pafi148gspbou8u2820imf16a5mpnhr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCBjOTQ6v2glmYpbpJl5GViuDfdAM9hc6o"
+          "current_key": "AIzaSyCcv0n0MbiZfmSSf-ui8sWLt2BVIKgAzWo"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367668830802-6pafi148gspbou8u2820imf16a5mpnhr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
