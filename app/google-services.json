@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "363175592859",
+    "firebase_url": "https://messager-ca0e2.firebaseio.com",
+    "project_id": "messager-ca0e2",
+    "storage_bucket": "messager-ca0e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363175592859:android:0aa9b6ec4df3e0c3",
+        "android_client_info": {
+          "package_name": "com.andrei.messager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363175592859-tj7833kgva0b4rgmv52djm8sosjtto4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBjOTQ6v2glmYpbpJl5GViuDfdAM9hc6o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
