@@ -20,6 +20,10 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
+        maven {
+            url "https://repository-achartengine.forge.cloudbees.com/snapshot/"
+        }
     }
 }
 
