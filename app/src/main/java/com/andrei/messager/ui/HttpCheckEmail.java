@@ -40,6 +40,8 @@ public class HttpCheckEmail implements IDataSubscriber {
             String body = String.format("{\"email\" : \"%s\"}", email);
             String [] dataArray = {url, "POST", body};
             httpTask.execute(dataArray);
+        } else {
+            Toast.makeText(context, "Network not available.", Toast.LENGTH_LONG).show();
         }
     }
 

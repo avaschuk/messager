@@ -48,6 +48,7 @@ public class HttpTask extends AsyncTask<String, Void, String> {
             e.printStackTrace();
             this.error = true;
         }
+        System.out.println(responseString);
         return responseString;
     }
 

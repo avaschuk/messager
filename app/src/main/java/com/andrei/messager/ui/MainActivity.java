@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.andrei.messager.Contacts;
 import com.andrei.messager.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -29,14 +30,16 @@ import org.json.JSONObject;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, IMainActivityView {
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, IMainActivityView, IMainActivityCreateAccountView {
 
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 11223;
     private Validator validator;
     private Context appContext;
     private HttpCheckEmail httpCheckEmail;
-    private ProgressBar progressBar;
+    private HttpCreateAccount httpCreateAccount;
+    private ProgressBar progressBarNext;
+    private ProgressBar progressBarConfirm;
     private Button nextButton;
     private Button backButton;
     private Button confirmButton;
@@ -62,7 +65,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         backButton = findViewById(R.id.back_button);
         emailAddress = findViewById(R.id.email_address);
         passwordEditText = findViewById(R.id.password_edit_text);
-        progressBar = findViewById(R.id.progress_bar);
+        progressBarNext = findViewById(R.id.progress_bar_next);
+        progressBarConfirm = findViewById(R.id.progress_bar_confirm);
         confirmButton = findViewById(R.id.confirm_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,12 +123,17 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     public void onValidationSucceeded() {
         //layout_constraintTop_toBottomOf
         if (!isEmailChecked) {
-            progressBar.setVisibility(ProgressBar.VISIBLE);
+            progressBarNext.setVisibility(ProgressBar.VISIBLE);
             nextButton.setVisibility(Button.INVISIBLE);
             httpCheckEmail = new HttpCheckEmail(appContext, this);
             httpCheckEmail.checkEmail(emailAddress.getText().toString());
         } else {
-            Toast.makeText(this, "Going to create account!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Going to create account!", Toast.LENGTH_SHORT).show();
+            progressBarConfirm.setVisibility(ProgressBar.VISIBLE);
+            confirmButton.setVisibility(Button.INVISIBLE);
+            backButton.setEnabled(false);
+            httpCreateAccount = new HttpCreateAccount(appContext, this);
+            httpCreateAccount.createAccount(emailAddress.getText().toString(), passwordEditText.getText().toString());
         }
     }
 
@@ -143,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void returnUi() {
-        progressBar.setVisibility(ProgressBar.INVISIBLE);
+        progressBarNext.setVisibility(ProgressBar.INVISIBLE);
         nextButton.setVisibility(Button.VISIBLE);
         passwordEditText.setVisibility(EditText.INVISIBLE);
         backButton.setVisibility(Button.INVISIBLE);
@@ -160,12 +169,12 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             String message =  jsonObject.getString("message");
             if (message.equals("ACCOUNT_NOT_FOUND")) {
                 isEmailChecked = true;
-                progressBar.setVisibility(ProgressBar.INVISIBLE);
+                progressBarNext.setVisibility(ProgressBar.INVISIBLE);
                 passwordEditText.setVisibility(EditText.VISIBLE);
                 emailAddress.setEnabled(false);
                 backButton.setVisibility(Button.VISIBLE);
                 confirmButton.setVisibility(Button.VISIBLE);
-                Toast.makeText(this, "Account not found. You can register here", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Please, create a password.", Toast.LENGTH_LONG).show();
                 View view = this.getCurrentFocus();
                 if (view != null) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -173,9 +182,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 }
             } else if (message.equals("ACCOUNT_ALREADY_EXIST")) {
                 returnUi();
-                Toast.makeText(this, "Email already used. Try login", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Account with this email already exist.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Something wrong. Please try again later", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Something wrong. Please try again later.", Toast.LENGTH_LONG).show();
                 returnUi();
             }
         } catch (JSONException e) {
@@ -184,6 +193,34 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     public void onBackButtonClick(View view) {
+        passwordEditText.getText().clear();
         returnUi();
+    }
+
+    @Override
+    public void errorWhileCreateAccount() {
+        progressBarConfirm.setVisibility(ProgressBar.INVISIBLE);
+        backButton.setEnabled(true);
+        confirmButton.setVisibility(Button.VISIBLE);
+        Toast.makeText(this, "Something wrong. Please try again later", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void login(String jsonData) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONObject messageObject = jsonObject.getJSONObject("message");
+            String id = messageObject.getString("id");
+            if (id != null) {
+                Toast.makeText(this, "You are successfully registered", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, Contacts.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Something wrong. Please try again later", Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Something wrong. Please try again later", Toast.LENGTH_LONG).show();
+        }
     }
 }
