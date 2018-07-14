@@ -5,41 +5,51 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.andrei.messager.BuildConfig;
 import com.andrei.messager.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Password;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements Validator.ValidationListener {
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, IMainActivityView {
 
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 11223;
     private Validator validator;
-    private Button signUpButton;
     private Context appContext;
-    private HttpLogin httpLogin;
+    private HttpCheckEmail httpCheckEmail;
+    private ProgressBar progressBar;
+    private Button nextButton;
+    private Button backButton;
+    private Button confirmButton;
+    private String enteredEmail;
+    private String enteredPassword;
+    private Boolean isEmailChecked = false;
 
     @NotEmpty
     @Email
     private EditText emailAddress;
 
-//    @Password(min = 6, scheme = Password.Scheme.ALPHA_NUMERIC_MIXED_CASE_SYMBOLS, message = "Minimum length is 6")
-//    private EditText password;
+    @Password(min = 6, message = "Minimum length is 6")
+    private EditText passwordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +57,20 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         setContentView(R.layout.activity_main);
         validator = new Validator(this);
         validator.setValidationListener(this);
-        signUpButton = findViewById(R.id.sign_up_button);
+        appContext = getApplicationContext();
+        nextButton = findViewById(R.id.next_button);
+        backButton = findViewById(R.id.back_button);
         emailAddress = findViewById(R.id.email_address);
-//        password = findViewById(R.id.password);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
+        passwordEditText = findViewById(R.id.password_edit_text);
+        progressBar = findViewById(R.id.progress_bar);
+        confirmButton = findViewById(R.id.confirm_button);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validator.validate();
+            }
+        });
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 validator.validate();
@@ -58,11 +78,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         });
 
 //        findViewById(R.id.google_sign_in_button).setOnClickListener(this);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .requestIdToken(getString(R.string.default_web_client_id))
+//                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     private void googleSignIn() {
@@ -97,12 +117,15 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-//        Toast.makeText(this, "Yay! we got it right!", Toast.LENGTH_SHORT).show();
-        System.out.println("onNextClick");
-        System.out.println(emailAddress.getText());
-        appContext = getApplicationContext();
-        httpLogin = new HttpLogin(appContext);
-        httpLogin.checkEmail(emailAddress.getText().toString());
+        //layout_constraintTop_toBottomOf
+        if (!isEmailChecked) {
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            nextButton.setVisibility(Button.INVISIBLE);
+            httpCheckEmail = new HttpCheckEmail(appContext, this);
+            httpCheckEmail.checkEmail(emailAddress.getText().toString());
+        } else {
+            Toast.makeText(this, "Going to create account!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -116,5 +139,51 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void returnUi() {
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
+        nextButton.setVisibility(Button.VISIBLE);
+        passwordEditText.setVisibility(EditText.INVISIBLE);
+        backButton.setVisibility(Button.INVISIBLE);
+        confirmButton.setVisibility(Button.INVISIBLE);
+        emailAddress.setEnabled(true);
+        isEmailChecked = false;
+    }
+
+    @Override
+    public void nextStep(String data) {
+        //returnUi();
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            String message =  jsonObject.getString("message");
+            if (message.equals("ACCOUNT_NOT_FOUND")) {
+                isEmailChecked = true;
+                progressBar.setVisibility(ProgressBar.INVISIBLE);
+                passwordEditText.setVisibility(EditText.VISIBLE);
+                emailAddress.setEnabled(false);
+                backButton.setVisibility(Button.VISIBLE);
+                confirmButton.setVisibility(Button.VISIBLE);
+                Toast.makeText(this, "Account not found. You can register here", Toast.LENGTH_LONG).show();
+                View view = this.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            } else if (message.equals("ACCOUNT_ALREADY_EXIST")) {
+                returnUi();
+                Toast.makeText(this, "Email already used. Try login", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Something wrong. Please try again later", Toast.LENGTH_LONG).show();
+                returnUi();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onBackButtonClick(View view) {
+        returnUi();
     }
 }

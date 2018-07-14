@@ -22,7 +22,7 @@ android {
 
         dev {
             applicationId "com.andrei.messager"
-            buildConfigField "String", BASE_ENDPOINT, '"http://192.168.1.11:8080/api/"'
+            buildConfigField "String", BASE_ENDPOINT, '"https://messager-api.herokuapp.com/api/"'
         }
     }
 }

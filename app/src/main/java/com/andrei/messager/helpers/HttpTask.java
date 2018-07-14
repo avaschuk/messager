@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 
 import com.andrei.messager.IDataSubscriber;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,7 +23,10 @@ public class HttpTask extends AsyncTask<String, Void, String> {
 
     public HttpTask(final IDataSubscriber dataSubscriber) {
         this.dataSubscriber = dataSubscriber;
-        this.client = new OkHttpClient();
+        this.client = new OkHttpClient()
+                .newBuilder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .build();
         this.error = false;
     }
 
