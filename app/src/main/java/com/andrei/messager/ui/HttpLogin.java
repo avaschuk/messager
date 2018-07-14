@@ -3,18 +3,20 @@ package com.andrei.messager.ui;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
+import com.andrei.messager.BuildConfig;
 import com.andrei.messager.IDataSubscriber;
-import com.andrei.messager.helpers.HttpGetTask;
+import com.andrei.messager.helpers.HttpTask;
 
 public class HttpLogin implements IDataSubscriber {
 
     private final Context context;
-    private final HttpGetTask httpGetTask;
+    private final HttpTask httpTask;
 
     public HttpLogin(Context context) {
         this.context = context;
-        this.httpGetTask = new HttpGetTask(this);
+        this.httpTask = new HttpTask(this);
     }
 
     @Override
@@ -25,15 +27,17 @@ public class HttpLogin implements IDataSubscriber {
 
     @Override
     public void onLoadError() {
-
+        Toast.makeText(context, "Service unavailable. Please try again later", Toast.LENGTH_LONG).show();
     }
 
-    void checkEmail() {
+    void checkEmail(String email) {
         System.out.println("checkEmail");
         if (isNetworkAvailable()) {
             System.out.println("if available");
-            String [] url = {"http://qwe.com"};
-            httpGetTask.execute(url);
+            String url = BuildConfig.BASE_ENDPOINT + "account/isExist";
+            String body = String.format("{\"email\" : \"%s\"}", email);
+            String [] dataArray = {url, "POST", body};
+            httpTask.execute(dataArray);
         }
     }
 

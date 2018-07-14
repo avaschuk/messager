@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.andrei.messager.BuildConfig;
 import com.andrei.messager.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         System.out.println(emailAddress.getText());
         appContext = getApplicationContext();
         httpLogin = new HttpLogin(appContext);
-        httpLogin.checkEmail();
+        httpLogin.checkEmail(emailAddress.getText().toString());
     }
 
     @Override

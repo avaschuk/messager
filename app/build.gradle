@@ -16,6 +16,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "default"
+    productFlavors {
+        def BASE_ENDPOINT = "BASE_ENDPOINT"
+
+        dev {
+            applicationId "com.andrei.messager"
+            buildConfigField "String", BASE_ENDPOINT, '"http://192.168.1.11:8080/api/"'
+        }
+    }
 }
 
 dependencies {
@@ -29,6 +38,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.mobsandgeeks:android-saripaar:2.0.3'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
