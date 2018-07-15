@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.andrei.messager.ui.MainActivity;
+import com.andrei.messager.ui.singup.MainActivity;
 
 public class SplashScreen extends Activity {
 

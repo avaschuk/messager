@@ -1,4 +1,4 @@
-package com.andrei.messager.ui;
+package com.andrei.messager.ui.singup;
 
 public interface IMainActivityCreateAccountView {
     void errorWhileCreateAccount();

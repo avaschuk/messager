@@ -1,4 +1,4 @@
-package com.andrei.messager.ui;
+package com.andrei.messager.ui.singup;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
