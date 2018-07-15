@@ -1,5 +1,6 @@
 package com.andrei.messager.ui.singup;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.andrei.messager.Contacts;
+import com.andrei.messager.helpers.SetupAccountDatabase;
+import com.andrei.messager.ui.contacts.Contacts;
 import com.andrei.messager.R;
+import com.andrei.messager.ui.login.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -117,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     public void onLogInClick(View view) {
 //        googleSignIn();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -212,8 +218,19 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             JSONObject messageObject = jsonObject.getJSONObject("message");
             String id = messageObject.getString("id");
             if (id != null) {
+                String role = messageObject.getString("role");
+                String email = messageObject.getString("email");
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(SetupAccountDatabase.ACC_ID, id);
+                contentValues.put(SetupAccountDatabase.EMAIL, email);
+                contentValues.put(SetupAccountDatabase.ROLE, role);
+                SetupAccountDatabase sad = new SetupAccountDatabase(MainActivity.this);
+                sad.insert(contentValues);
                 Toast.makeText(this, "You are successfully registered", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, Contacts.class);
+                intent.putExtra(Contacts.ID, id);
+                intent.putExtra(Contacts.EMAIL, email);
+                intent.putExtra(Contacts.ROLE, role);
                 startActivity(intent);
                 finish();
             } else {

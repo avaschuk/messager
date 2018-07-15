@@ -29,10 +29,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.singup.MainActivity" />
-        <activity android:name=".Contacts" />
+        <activity android:name=".ui.contacts.Contacts" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
     </application>
 
 </manifest>

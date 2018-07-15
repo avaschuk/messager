@@ -4,47 +4,54 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 
+import com.andrei.messager.helpers.SetupAccountDatabase;
+import com.andrei.messager.ui.contacts.Contacts;
 import com.andrei.messager.ui.singup.MainActivity;
+
+import java.util.HashMap;
 
 public class SplashScreen extends Activity {
 
     private boolean isLoggedIn = true;
-    private static final int SPLASH_TIME_OUT = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("MESSAGER LOADING...");
-                new PrepareData().execute();
-            }
-        }, SPLASH_TIME_OUT);
+        new SetupAccountDatabase(this);
+        new PrepareData().execute();
     }
 
-    private class PrepareData extends AsyncTask<Void, Void, Void> {
+    private class PrepareData extends AsyncTask<Void, Void, HashMap<String, String>> {
+
+        private SetupAccountDatabase dbHelper;
+
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            dbHelper = new SetupAccountDatabase(SplashScreen.this);
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
+        protected HashMap<String, String> doInBackground(Void... voids) {
+            return dbHelper.getAccountDetails();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(HashMap<String, String> map) {
             Intent intent = null;
-            if (isLoggedIn) {
+            System.out.println("map !!!!!!!!!!!!");
+            System.out.println(map);
+            String id = map.get(SetupAccountDatabase.ACC_ID);
+            if (id.equals("id")) {
                 intent = new Intent(SplashScreen.this, MainActivity.class);
             } else {
+                String email = map.get(SetupAccountDatabase.EMAIL);
+                String role = map.get(SetupAccountDatabase.ROLE);
                 intent = new Intent(SplashScreen.this, Contacts.class);
+                intent.putExtra(Contacts.ID, id);
+                intent.putExtra(Contacts.ROLE, role);
+                intent.putExtra(Contacts.EMAIL, email);
             }
 
             startActivity(intent);
