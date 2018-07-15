@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 Toast.makeText(this, "You are successfully registered", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, Contacts.class);
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(this, "Something wrong. Please try again later", Toast.LENGTH_LONG).show();
             }
