@@ -1,5 +1,6 @@
 package com.andrei.messager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,10 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.andrei.messager.helpers.SetupAccountDatabase;
 import com.andrei.messager.ui.contact.SearchContactFragment;
 import com.andrei.messager.ui.message.MessageFragment;
 
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TextView navUsernameTextView;
     private TextView navEmailTextView;
+    private String ACC_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +56,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            String id = bundle.getString(ID);
+            ACC_ID = id;
+
             String email = bundle.getString(EMAIL);
             String role = bundle.getString(ROLE);
             String username = bundle.getString(USERNAME);
             if (email != null) navEmailTextView.setText(email);
             if (username != null) navUsernameTextView.setText(username);
-//            if (role != null) {
-//                if (role.equals("ADMIN")) {
-//                    adminTextView.setText("Hello, BOSS!");
-//                    adminTextView.setVisibility(View.VISIBLE);
-//                }
-//            }
         }
 
 
@@ -107,5 +108,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main2, menu);
+        return true;
+    }
+
+    public void logOut() {
+        SetupAccountDatabase dbHelper = new SetupAccountDatabase(this);
+        dbHelper.deleteAccountById(ACC_ID);
+        Intent intent = new Intent(this, SplashScreen.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_log_out:
+                logOut();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
