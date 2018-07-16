@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.andrei.messager.BuildConfig;
 import com.andrei.messager.helpers.SetupAccountDatabase;
-import com.andrei.messager.ui.contacts.Contacts;
+import com.andrei.messager.ui.contact.Contacts;
 import com.andrei.messager.R;
 import com.andrei.messager.helpers.HttpTask;
 import com.andrei.messager.helpers.Utils;

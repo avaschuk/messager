@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.andrei.messager.helpers.SetupAccountDatabase;
-import com.andrei.messager.ui.contacts.Contacts;
+import com.andrei.messager.ui.contact.Contacts;
 import com.andrei.messager.R;
 import com.andrei.messager.ui.login.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;

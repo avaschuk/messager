@@ -21,8 +21,16 @@
     <string name="error_field_required">This field is required</string>
     <string name="account_with_email_not_found">Account with this email not found</string>
     <!---->
-    
-    <!--String related to contacts-->
 
+
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
+
+    <!--String related to menu-->
+    <string name="nav_search_contact">Search friend</string>
+    <string name="nav_messages">Messages</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!---->
 </resources>

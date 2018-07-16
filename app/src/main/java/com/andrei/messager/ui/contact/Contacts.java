@@ -1,4 +1,4 @@
-package com.andrei.messager.ui.contacts;
+package com.andrei.messager.ui.contact;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.andrei.messager.MainActivity;
 import com.andrei.messager.R;
 import com.andrei.messager.SplashScreen;
 import com.andrei.messager.helpers.SetupAccountDatabase;
@@ -53,5 +54,11 @@ public class Contacts extends AppCompatActivity {
         Intent intent = new Intent(this, SplashScreen.class);
         startActivity(intent);
         finish();
+    }
+
+    public void onMainActivityClick(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+//        finish();
     }
 }

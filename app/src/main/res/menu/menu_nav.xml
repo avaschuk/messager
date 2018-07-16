@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_messages"
+            android:icon="@android:drawable/sym_action_email"
+            android:title="@string/nav_messages"
+            android:checked="true" />
+        <item
+            android:id="@+id/nav_find_contacts"
+            android:icon="@android:drawable/ic_menu_search"
+            android:title="@string/nav_search_contact" />
+    </group>
+
+</menu>

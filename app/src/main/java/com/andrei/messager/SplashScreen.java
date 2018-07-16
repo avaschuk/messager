@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.andrei.messager.helpers.SetupAccountDatabase;
-import com.andrei.messager.ui.contacts.Contacts;
+import com.andrei.messager.ui.contact.Contacts;
 import com.andrei.messager.ui.singup.SingUp;
 
 import java.util.HashMap;

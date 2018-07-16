@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.contacts.Contacts">
+    tools:context=".ui.contact.Contacts">
 
     <TextView
         android:id="@+id/admin_text_view"
@@ -45,5 +45,15 @@
         android:text="Log out"
         app:layout_constraintStart_toStartOf="@+id/email_text_view"
         app:layout_constraintTop_toBottomOf="@+id/email_text_view" />
+
+    <Button
+        android:id="@+id/main_activity_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:onClick="onMainActivityClick"
+        android:text="Main activity"
+        app:layout_constraintStart_toStartOf="@+id/log_out_button"
+        app:layout_constraintTop_toBottomOf="@+id/log_out_button" />
 
 </android.support.constraint.ConstraintLayout>
