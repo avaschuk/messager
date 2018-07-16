@@ -58,6 +58,7 @@ public class Contacts extends AppCompatActivity {
 
     public void onMainActivityClick(View view) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EMAIL, email);
         startActivity(intent);
 //        finish();
     }
