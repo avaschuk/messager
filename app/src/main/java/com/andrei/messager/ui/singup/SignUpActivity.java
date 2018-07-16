@@ -60,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
     public void onLogInClick(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void onNextClick(View view) throws InterruptedException {
@@ -291,6 +292,7 @@ public class SignUpActivity extends AppCompatActivity {
                         intent.putExtra(MainActivity.EMAIL, email);
                         intent.putExtra(MainActivity.USERNAME, username);
                         startActivity(intent);
+                        finish();
                     } else {
                         createToastServiceUnavailable();
                     }
