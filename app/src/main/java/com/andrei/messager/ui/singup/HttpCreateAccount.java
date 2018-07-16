@@ -13,9 +13,9 @@ public class HttpCreateAccount implements IDataSubscriber {
 
     private final Context context;
     private final HttpTask httpTask;
-    private final IMainActivityCreateAccountView mainActivity;
+    private final ISignUpActivityCreateAccountView mainActivity;
 
-    public HttpCreateAccount(Context context, IMainActivityCreateAccountView mainActivity) {
+    public HttpCreateAccount(Context context, ISignUpActivityCreateAccountView mainActivity) {
         this.context = context;
         this.mainActivity = mainActivity;
         this.httpTask = new HttpTask(this);

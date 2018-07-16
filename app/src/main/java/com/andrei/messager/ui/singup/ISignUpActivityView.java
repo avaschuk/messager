@@ -1,6 +1,6 @@
 package com.andrei.messager.ui.singup;
 
-public interface IMainActivityView {
+public interface ISignUpActivityView {
     void returnUi();
     void nextStep(String data);
 }

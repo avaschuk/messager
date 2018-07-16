@@ -13,9 +13,9 @@ public class HttpCheckEmail implements IDataSubscriber {
 
     private final Context context;
     private final HttpTask httpTask;
-    private final IMainActivityView mainActivityView;
+    private final ISignUpActivityView mainActivityView;
 
-    public HttpCheckEmail(Context context, final IMainActivityView mainActivityView) {
+    public HttpCheckEmail(Context context, final ISignUpActivityView mainActivityView) {
         this.context = context;
         this.mainActivityView = mainActivityView;
         this.httpTask = new HttpTask(this);

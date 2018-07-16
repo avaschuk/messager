@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, IMainActivityView, IMainActivityCreateAccountView {
+public class SingUp extends AppCompatActivity implements Validator.ValidationListener, ISignUpActivityView, ISignUpActivityCreateAccountView {
 
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 11223;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_up);
         validator = new Validator(this);
         validator.setValidationListener(this);
         appContext = getApplicationContext();
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     public void onLogInClick(View view) {
 //        googleSignIn();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(SingUp.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 contentValues.put(SetupAccountDatabase.ACC_ID, id);
                 contentValues.put(SetupAccountDatabase.EMAIL, email);
                 contentValues.put(SetupAccountDatabase.ROLE, role);
-                SetupAccountDatabase sad = new SetupAccountDatabase(MainActivity.this);
+                SetupAccountDatabase sad = new SetupAccountDatabase(SingUp.this);
                 sad.insert(contentValues);
                 Toast.makeText(this, "You are successfully registered", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, Contacts.class);

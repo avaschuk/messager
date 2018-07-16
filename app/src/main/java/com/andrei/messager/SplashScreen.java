@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.andrei.messager.helpers.SetupAccountDatabase;
 import com.andrei.messager.ui.contacts.Contacts;
-import com.andrei.messager.ui.singup.MainActivity;
+import com.andrei.messager.ui.singup.SingUp;
 
 import java.util.HashMap;
 
@@ -44,7 +44,7 @@ public class SplashScreen extends Activity {
             System.out.println(map);
             String id = map.get(SetupAccountDatabase.ACC_ID);
             if (id.equals("id")) {
-                intent = new Intent(SplashScreen.this, MainActivity.class);
+                intent = new Intent(SplashScreen.this, SingUp.class);
             } else {
                 String email = map.get(SetupAccountDatabase.EMAIL);
                 String role = map.get(SetupAccountDatabase.ROLE);

@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.singup.MainActivity" />
+        <activity android:name=".ui.singup.SingUp" />
         <activity android:name=".ui.contacts.Contacts" />
         <activity
             android:name=".ui.login.LoginActivity"
