@@ -16,6 +16,7 @@ public class SetupAccountDatabase extends SQLiteOpenHelper {
     public static final String ACC_ID = "acc_id";
     public static final String ROLE = "role";
     public static final String EMAIL = "email";
+    public static final String USERNAME = "username";
 
     public SetupAccountDatabase(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -30,7 +31,8 @@ public class SetupAccountDatabase extends SQLiteOpenHelper {
         System.out.println("on create !!!!!!");
         db.execSQL("CREATE TABLE " + DB_NAME + " (" + ACC_ID + " TEXT, " +
                 "" + ROLE + " TEXT, " +
-                "" + EMAIL + " TEXT);");
+                "" + EMAIL + " TEXT, " +
+                "" + USERNAME + " TEXT);");
     }
 
     @Override
@@ -64,22 +66,25 @@ public class SetupAccountDatabase extends SQLiteOpenHelper {
         HashMap map = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(DB_NAME,
-                new String[]{ACC_ID, ROLE, EMAIL},
+                new String[]{ ACC_ID, ROLE, EMAIL, USERNAME },
                 null, null, null, null, null);
         String id = "id";
         String email = "email";
         String role = "role";
+        String username = "username";
 
         if (cursor.moveToFirst()) {
             id = cursor.getString(0);
             role = cursor.getString(1);
             email = cursor.getString(2);
+            username = cursor.getString(3);
         }
         cursor.close();
         db.close();
         map.put(ACC_ID, id);
         map.put(ROLE, role);
         map.put(EMAIL, email);
+        map.put(USERNAME, username);
         return map;
     }
 }

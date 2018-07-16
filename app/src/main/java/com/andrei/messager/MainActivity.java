@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String ID = "ID";
     public static final String ROLE = "ROLE";
     public static final String EMAIL = "EMAIL";
+    public static final String USERNAME = "USERNAME";
 
     private TextView navUsernameTextView;
     private TextView navEmailTextView;
@@ -53,8 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (bundle != null) {
             String email = bundle.getString(EMAIL);
             String role = bundle.getString(ROLE);
+            String username = bundle.getString(USERNAME);
             if (email != null) navEmailTextView.setText(email);
-            navUsernameTextView.setText("USERNAME");
+            if (username != null) navUsernameTextView.setText(username);
 //            if (role != null) {
 //                if (role.equals("ADMIN")) {
 //                    adminTextView.setText("Hello, BOSS!");

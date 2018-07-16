@@ -18,12 +18,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.andrei.messager.BuildConfig;
+import com.andrei.messager.MainActivity;
 import com.andrei.messager.helpers.SetupAccountDatabase;
-import com.andrei.messager.ui.contact.Contacts;
 import com.andrei.messager.R;
 import com.andrei.messager.helpers.HttpTask;
 import com.andrei.messager.helpers.Utils;
-import com.andrei.messager.ui.singup.SingUp;
+import com.andrei.messager.ui.singup.SignUpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,9 +104,8 @@ public class LoginActivity extends AppCompatActivity {
             focusView = mPasswordView;
             cancel = true;
         }
-
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        else if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
@@ -130,12 +129,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -177,13 +174,13 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, SingUp.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
         finish();
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous login task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, String> {
@@ -233,16 +230,19 @@ public class LoginActivity extends AppCompatActivity {
                         String role = accountInfo.getString("role");
                         String id = accountInfo.getString("id");
                         String email = accountInfo.getString("email");
-                        Intent intent = new Intent(LoginActivity.this, Contacts.class);
+                        String username = accountInfo.getString("username");
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(SetupAccountDatabase.ACC_ID, id);
                         contentValues.put(SetupAccountDatabase.EMAIL, email);
                         contentValues.put(SetupAccountDatabase.ROLE, role);
+                        contentValues.put(SetupAccountDatabase.USERNAME, username);
                         SetupAccountDatabase sad = new SetupAccountDatabase(LoginActivity.this);
                         sad.insert(contentValues);
-                        intent.putExtra(Contacts.ROLE, role);
-                        intent.putExtra(Contacts.ID, id);
-                        intent.putExtra(Contacts.EMAIL, email);
+                        intent.putExtra(MainActivity.ROLE, role);
+                        intent.putExtra(MainActivity.ID, id);
+                        intent.putExtra(MainActivity.EMAIL, email);
+                        intent.putExtra(MainActivity.USERNAME, username);
                         startActivity(intent);
                         finish();
                     } else if (message.equals("INCORRECT_PASSWORD")) {
