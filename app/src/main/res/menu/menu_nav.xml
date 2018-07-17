@@ -8,9 +8,9 @@
             android:title="@string/nav_messages"
             android:checked="true" />
         <item
-            android:id="@+id/nav_find_contacts"
-            android:icon="@android:drawable/ic_menu_search"
-            android:title="@string/nav_search_contact" />
+            android:id="@+id/nav_log_out"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:title="@string/nav_log_out" />
     </group>
 
 </menu>

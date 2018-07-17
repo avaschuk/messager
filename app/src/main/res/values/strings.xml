@@ -10,7 +10,7 @@
     <string name="next_button">next</string>
     <string name="back_button">back</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="action_log_out">Log out</string>
+    <string name="action_search">Search</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -30,8 +30,8 @@
     <string name="nav_close_drawer">Close navigation drawer</string>
 
     <!--String related to menu-->
-    <string name="nav_search_contact">Search contact</string>
     <string name="nav_messages">Messages</string>
+    <string name="nav_log_out">Log out</string>
     <!---->
 
     <!--String related to labels-->

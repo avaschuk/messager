@@ -10,14 +10,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andrei.messager.helpers.SetupAccountDatabase;
-import com.andrei.messager.ui.contact.SearchContactFragment;
 import com.andrei.messager.ui.message.MessageFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -80,19 +83,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String title = "";
 
         switch (id) {
-            case R.id.nav_find_contacts:
-                fragment = new SearchContactFragment();
-                title = getResources().getString(R.string.label_search_contact);
-                break;
+            case R.id.nav_log_out:
+                logOut();
+                return true;
             default:
                 fragment = new MessageFragment();
                 title = getResources().getString(R.string.label_messages);
         }
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, fragment);
-        fragmentTransaction.commit();
-        getSupportActionBar().setTitle(title);
+        if (fragment != null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment);
+            fragmentTransaction.commit();
+            getSupportActionBar().setTitle(title);
+        }
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -109,14 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        return true;
-    }
-
     public void logOut() {
         SetupAccountDatabase dbHelper = new SetupAccountDatabase(this);
         dbHelper.deleteAccountById(ACC_ID);
@@ -126,15 +122,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_log_out:
-                logOut();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        return true;
     }
 }
