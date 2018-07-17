@@ -30,8 +30,14 @@
     <string name="nav_close_drawer">Close navigation drawer</string>
 
     <!--String related to menu-->
-    <string name="nav_search_contact">Search friend</string>
+    <string name="nav_search_contact">Search contact</string>
     <string name="nav_messages">Messages</string>
+    <!---->
+
+    <!--String related to labels-->
+    <string name="label_messages">Messages</string>
+    <string name="label_search_contact">Search contact</string>
+    <!---->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -75,26 +75,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        System.out.println("onNavigationItemSelected");
         int id = item.getItemId();
-        System.out.println("id ---- " + id);
-
         Fragment fragment = null;
+        String title = "";
 
         switch (id) {
-            case R.id.nav_messages:
-                fragment = new MessageFragment();
-                break;
             case R.id.nav_find_contacts:
                 fragment = new SearchContactFragment();
+                title = getResources().getString(R.string.label_search_contact);
                 break;
             default:
                 fragment = new MessageFragment();
+                title = getResources().getString(R.string.label_messages);
         }
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
         fragmentTransaction.commit();
+        getSupportActionBar().setTitle(title);
+
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
