@@ -11,6 +11,7 @@
     <string name="back_button">back</string>
     <string name="title_activity_login">Sign in</string>
     <string name="action_search">Search</string>
+    <string name="add_contact">Add contact</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -41,5 +42,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_add_contact">Add contact</string>
     <!---->
 </resources>

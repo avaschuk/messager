@@ -23,14 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.singup.SignUpActivity" >
-        </activity>
+        <activity android:name=".ui.singup.SignUpActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/label_messages"/>
+            android:label="@string/label_messages" />
+        <activity
+            android:label="@string/label_add_contact"
+            android:name=".ui.contact.AddContact">
+        </activity>
     </application>
 
 </manifest>

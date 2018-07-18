@@ -228,6 +228,7 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    createToastServiceUnavailable();
                 }
             }
         }

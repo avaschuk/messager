@@ -28,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andrei.messager.helpers.SetupAccountDatabase;
+import com.andrei.messager.model.User;
+import com.andrei.messager.ui.contact.AddContact;
 import com.andrei.messager.ui.message.MessageFragment;
 
 import org.json.JSONArray;
@@ -171,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         mAdapter.setViewBinder(binder);
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
@@ -201,6 +203,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     JSONObject userObject = usersArray.getJSONObject(position);
                     System.out.println("userObject");
                     System.out.println(userObject);
+                    Intent intent = new Intent(MainActivity.this, AddContact.class);
+                    User user = new User();
+                    user.setId(userObject.getString("id"));
+                    user.setEmail(userObject.getString("email"));
+                    user.setUsername(userObject.getString("username"));
+                    intent.putExtra("userObject", user);
+                    startActivity(intent);
+                    searchItem.collapseActionView();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

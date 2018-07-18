@@ -18,12 +18,11 @@ android {
     }
     flavorDimensions "default"
     productFlavors {
-        def BASE_ENDPOINT = "BASE_ENDPOINT"
-
         dev {
             applicationId "com.andrei.messager"
-            buildConfigField "String", BASE_ENDPOINT, '"https://messager-api.herokuapp.com/api/"'
-//            buildConfigField "String", BASE_ENDPOINT, '"http://192.168.1.11:8080/api/"'
+            getProps('./config/dev.props').each { p ->
+                buildConfigField 'String', p.key, p.value
+            }
         }
     }
 }
@@ -41,6 +40,13 @@ dependencies {
     implementation 'com.mobsandgeeks:android-saripaar:2.0.3'
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+}
+
+def getProps(path) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(path)))
+    return props
 }
 
 apply plugin: 'com.google.gms.google-services'
