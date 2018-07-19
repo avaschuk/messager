@@ -165,6 +165,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 TextView tv = (TextView)view;
+                System.out.println("columnIndex");
+                System.out.println(columnIndex);
                 String s = cursor.getString(columnIndex);
                 tv.setBackgroundColor(Color.WHITE);
                 tv.setText(s);
@@ -192,8 +194,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
-                System.out.println(position);
-                System.out.println("on suggestion select");
                 return false;
             }
 
@@ -201,8 +201,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onSuggestionClick(int position) {
                 try {
                     JSONObject userObject = usersArray.getJSONObject(position);
-                    System.out.println("userObject");
-                    System.out.println(userObject);
                     Intent intent = new Intent(MainActivity.this, AddContact.class);
                     User user = new User();
                     user.setId(userObject.getString("id"));
@@ -228,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 2) new FindUser(newText).execute();
+                if (newText.length() > 2) new FindUser(newText, ACC_ID).execute();
                 return false;
             }
         });
@@ -260,9 +258,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private class FindUser extends AsyncTask<Void, Void, String> {
 
         private String usernameOrEmail;
+        private String userId;
         private OkHttpClient client;
 
-        public FindUser(String usernameOrEmail) {
+        public FindUser(String usernameOrEmail, String userId) {
+            this.userId = userId;
             this.usernameOrEmail = usernameOrEmail;
             this.client = new OkHttpClient()
                     .newBuilder()
@@ -276,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
             urlBuilder.addQueryParameter("usernameOrEmail", usernameOrEmail);
+            urlBuilder.addQueryParameter("userId", userId);
             Request request = new Request.Builder()
                     .url(urlBuilder.build().toString())
                     .get()
