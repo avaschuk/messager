@@ -1,17 +1,13 @@
 package com.andrei.messager;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -22,27 +18,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andrei.messager.helpers.SetupAccountDatabase;
 import com.andrei.messager.model.User;
-import com.andrei.messager.ui.contact.AddContact;
 import com.andrei.messager.ui.message.MessageFragment;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LinearLayout linearLayoutSearch;
     private SearchView searchView;
 
-    private SimpleCursorAdapter mAdapter;
-    private JSONArray usersArray = new JSONArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,168 +144,129 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+
         final String[] from = new String[] {"username", "email"};
         final int[] to = new int[] {android.R.id.text1, android.R.id.text2};
-        mAdapter = new SimpleCursorAdapter(this,
+        ListAdapter mAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.two_line_list_item,
                 null,
                 from,
                 to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        SimpleCursorAdapter.ViewBinder binder = new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                TextView tv = (TextView)view;
-                System.out.println("columnIndex");
-                System.out.println(columnIndex);
-                String s = cursor.getString(columnIndex);
-                tv.setBackgroundColor(Color.WHITE);
-                tv.setText(s);
-                return true;
-            }
-        };
-        mAdapter.setViewBinder(binder);
+
+
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                switchMainWithSearch(false);
-                return true;
-            }
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setIconifiedByDefault(true);
+        SearchView.SearchAutoComplete searchAutoComplete =
+                searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchAutoComplete.setDropDownBackgroundResource(R.color.white);
+        searchAutoComplete.setDropDownAnchor(R.id.action_search);
+        String dataArr[] = { "kobrintown@gmail.com" , "koqwe@ewq.io" , "koqqq@eeee.cm" };
+        User user1 = new User();
+        user1.setId("1");
+        user1.setUsername("username1");
+        user1.setEmail("email1");
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                switchMainWithSearch(true);
-                return true;
-            }
+        User user2 = new User();
+        user2.setId("2");
+        user2.setUsername("username2");
+        user2.setEmail("email2");
+        ArrayAdapter<String> newsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_2, android.R.id.text1, dataArr);
+        searchAutoComplete.setAdapter(newsAdapter);
+        searchAutoComplete.setOnItemClickListener((adapterView, view, i, l) -> {
+            Toast.makeText(this,dataArr[i] ,Toast.LENGTH_SHORT).show();
         });
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setSuggestionsAdapter(mAdapter);
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
 
-            @Override
-            public boolean onSuggestionClick(int position) {
-                try {
-                    JSONObject userObject = usersArray.getJSONObject(position);
-                    Intent intent = new Intent(MainActivity.this, AddContact.class);
-                    User user = new User();
-                    user.setId(userObject.getString("id"));
-                    user.setEmail(userObject.getString("email"));
-                    user.setUsername(userObject.getString("username"));
-                    intent.putExtra("userObject", user);
-                    startActivity(intent);
-                    searchItem.collapseActionView();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-                System.out.println("on suggestion click");
-                return false;
-            }
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 2) new FindUser(newText, ACC_ID).execute();
-                return false;
-            }
-        });
         return true;
     }
 
-    private void populateAdapter(JSONArray users) {
-        System.out.println("populate adapter");
-        final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "username", "email" });
-        for (int i = 0; i < users.length(); i++) {
-            try {
-                JSONObject object = users.getJSONObject(i);
-                String id = object.getString("id");
-                String username = object.getString("username");
-                String email = object.getString("email");
-                c.addRow(new Object[] {id, username, email});
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        mAdapter.changeCursor(c);
-    }
+//    private void populateAdapter(JSONArray users) {
+//        System.out.println("populate adapter");
+//        final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "username", "email" });
+//        for (int i = 0; i < users.length(); i++) {
+//            try {
+//                JSONObject object = users.getJSONObject(i);
+//                String id = object.getString("id");
+//                String username = object.getString("username");
+//                String email = object.getString("email");
+//                c.addRow(new Object[] {id, username, email});
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        mAdapter.changeCursor(c);
+//    }
 
-    private void switchMainWithSearch(boolean showMain) {
-        frameLayoutMain.setVisibility(showMain ? View.VISIBLE : View.GONE);
-        linearLayoutSearch.setVisibility(!showMain ? View.VISIBLE : View.GONE);
-    }
-
-    private class FindUser extends AsyncTask<Void, Void, String> {
-
-        private String usernameOrEmail;
-        private String userId;
-        private OkHttpClient client;
-
-        public FindUser(String usernameOrEmail, String userId) {
-            this.userId = userId;
-            this.usernameOrEmail = usernameOrEmail;
-            this.client = new OkHttpClient()
-                    .newBuilder()
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .build();
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            String url = BuildConfig.BASE_ENDPOINT + "account/friend/find";
-
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
-            urlBuilder.addQueryParameter("usernameOrEmail", usernameOrEmail);
-            urlBuilder.addQueryParameter("userId", userId);
-            Request request = new Request.Builder()
-                    .url(urlBuilder.build().toString())
-                    .get()
-                    .build();
-            try {
-                Response response = client.newCall(request).execute();
-                return response.body().string();
-            } catch (IOException e) {
-                return "ERROR";
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s.equals("ERROR")) {
-                System.out.println("IF 1");
-                Toast.makeText(MainActivity.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
-            } else {
-                try {
-                    JSONObject object = new JSONObject(s);
-                    boolean error = object.getBoolean("error");
-                    if (!error) {
-                        if (object.has("users")) {
-                            JSONArray array = object.getJSONArray("users");
-                            usersArray = array;
-                            populateAdapter(array);
-                        }
-                    } else {
-                        System.out.println("ELSE 1");
-                        Toast.makeText(MainActivity.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    System.out.println("CATCH 1");
-                    e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
+//    private void switchMainWithSearch(boolean showMain) {
+//        frameLayoutMain.setVisibility(showMain ? View.VISIBLE : View.GONE);
+//        linearLayoutSearch.setVisibility(!showMain ? View.VISIBLE : View.GONE);
+//    }
+//
+//    private class FindUser extends AsyncTask<Void, Void, String> {
+//
+//        private String usernameOrEmail;
+//        private String userId;
+//        private OkHttpClient client;
+//
+//        public FindUser(String usernameOrEmail, String userId) {
+//            this.userId = userId;
+//            this.usernameOrEmail = usernameOrEmail;
+//            this.client = new OkHttpClient()
+//                    .newBuilder()
+//                    .connectTimeout(15, TimeUnit.SECONDS)
+//                    .build();
+//        }
+//
+//        @Override
+//        protected String doInBackground(Void... voids) {
+//            String url = BuildConfig.BASE_ENDPOINT + "account/friend/find";
+//
+//            HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+//            urlBuilder.addQueryParameter("usernameOrEmail", usernameOrEmail);
+//            urlBuilder.addQueryParameter("userId", userId);
+//            Request request = new Request.Builder()
+//                    .url(urlBuilder.build().toString())
+//                    .get()
+//                    .build();
+//            try {
+//                Response response = client.newCall(request).execute();
+//                return response.body().string();
+//            } catch (IOException e) {
+//                return "ERROR";
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            if (s.equals("ERROR")) {
+//                System.out.println("IF 1");
+//                Toast.makeText(MainActivity.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
+//            } else {
+//                try {
+//                    JSONObject object = new JSONObject(s);
+//                    boolean error = object.getBoolean("error");
+//                    if (!error) {
+//                        if (object.has("users")) {
+//                            JSONArray array = object.getJSONArray("users");
+//                            usersArray = array;
+////                            populateAdapter(array);
+//                        }
+//                    } else {
+//                        System.out.println("ELSE 1");
+//                        Toast.makeText(MainActivity.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (JSONException e) {
+//                    System.out.println("CATCH 1");
+//                    e.printStackTrace();
+//                    Toast.makeText(MainActivity.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
+//    }
 
 }
