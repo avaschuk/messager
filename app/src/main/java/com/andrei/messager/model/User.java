@@ -10,6 +10,12 @@ public class User implements Serializable {
 
     private String email;
 
+    private Boolean hasRequest;
+
+    public User() {
+        this.hasRequest = false;
+    }
+
     public String getId() {
         return id;
     }
@@ -34,12 +40,21 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public Boolean getHasRequest() {
+        return hasRequest;
+    }
+
+    public void setHasRequest(Boolean hasRequest) {
+        this.hasRequest = hasRequest;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", hasRequest=" + hasRequest +
                 '}';
     }
 }

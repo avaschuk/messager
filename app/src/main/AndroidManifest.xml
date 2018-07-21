@@ -31,9 +31,8 @@
             android:name=".MainActivity"
             android:label="@string/label_messages" />
         <activity
-            android:label="@string/label_add_contact"
-            android:name=".ui.contact.AddContact">
-        </activity>
+            android:name=".ui.contact.AddContact"
+            android:label="@string/label_add_contact" />
     </application>
 
 </manifest>

@@ -8,6 +8,11 @@
             android:title="@string/nav_messages"
             android:checked="true" />
         <item
+            android:checked="false"
+            android:id="@+id/nav_requests"
+            android:icon="@android:drawable/ic_popup_reminder"
+            android:title="@string/nav_requests" />
+        <item
             android:id="@+id/nav_log_out"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/nav_log_out" />

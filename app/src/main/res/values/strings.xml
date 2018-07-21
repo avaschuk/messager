@@ -43,5 +43,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="label_add_contact">Add contact</string>
+    <string name="nav_requests">Requests</string>
+    <string name="label_requests">Requests</string>
     <!---->
 </resources>

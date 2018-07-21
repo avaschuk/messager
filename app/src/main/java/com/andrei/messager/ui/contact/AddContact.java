@@ -56,10 +56,8 @@ public class AddContact extends AppCompatActivity {
             userObject = (User) getIntent().getSerializableExtra("userObject");
             emailTextView.setText(userObject.getEmail());
             usernameTextView.setText(userObject.getUsername());
+            if (userObject.getHasRequest()) blockButtonAddContact();
             System.out.println(userObject);
-        } else {
-            userObject = new User();
-            userObject.setId("1");
         }
     }
 
@@ -138,12 +136,17 @@ public class AddContact extends AppCompatActivity {
                     if (error) {
                         Toast.makeText(AddContact.this, "Service unavailable, please try again later", Toast.LENGTH_SHORT).show();
                     } else {
-                        addContactButton.setText("Request created");
+                        blockButtonAddContact();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private void blockButtonAddContact() {
+        addContactButton.setEnabled(false);
+        addContactButton.setText("Request created");
     }
 }

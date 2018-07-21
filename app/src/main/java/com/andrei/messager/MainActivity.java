@@ -31,6 +31,7 @@ import com.andrei.messager.helpers.SetupAccountDatabase;
 import com.andrei.messager.model.User;
 import com.andrei.messager.ui.contact.AddContact;
 import com.andrei.messager.ui.message.MessageFragment;
+import com.andrei.messager.ui.requests.RequestsFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -116,6 +117,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_log_out:
                 logOut();
                 return true;
+            case R.id.nav_requests:
+                fragment = new RequestsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(ID, ACC_ID);
+                fragment.setArguments(bundle);
+                title = getResources().getString(R.string.label_requests);
+                break;
             default:
                 fragment = new MessageFragment();
                 title = getResources().getString(R.string.label_messages);
@@ -156,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final String[] from = new String[] {"username", "email"};
         final int[] to = new int[] {android.R.id.text1, android.R.id.text2};
         mAdapter = new SimpleCursorAdapter(this,
-                android.R.layout.two_line_list_item,
+                android.R.layout.simple_list_item_2,
                 null,
                 from,
                 to,
@@ -168,8 +176,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 System.out.println("columnIndex");
                 System.out.println(columnIndex);
                 String s = cursor.getString(columnIndex);
-                tv.setBackgroundColor(Color.WHITE);
+//                tv.setBackgroundColor(Color.WHITE);
                 tv.setText(s);
+                tv.setTextColor(Color.WHITE);
                 return true;
             }
         };
@@ -207,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     user.setEmail(userObject.getString("email"));
                     user.setUsername(userObject.getString("username"));
                     intent.putExtra("userObject", user);
+                    if (userObject.has("request") && !userObject.isNull("request")) user.setHasRequest(true);
                     startActivity(intent);
                     searchItem.collapseActionView();
                 } catch (JSONException e) {
