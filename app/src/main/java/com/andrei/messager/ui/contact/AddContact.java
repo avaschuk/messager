@@ -147,6 +147,6 @@ public class AddContact extends AppCompatActivity {
 
     private void blockButtonAddContact() {
         addContactButton.setEnabled(false);
-        addContactButton.setText("Request created");
+        addContactButton.setText("RequestEntity created");
     }
 }
